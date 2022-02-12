@@ -18,9 +18,11 @@ const spreadMines = (board, minesAmount) => {
     const rows = board.length
     const columns = board[0].length
     let minesPlanted = 0
+
     while (minesPlanted < minesAmount) {
         const rowSel = parseInt(Math.random() * rows, 10)
         const columnSel = parseInt(Math.random() * columns, 10)
+
         if (!board[rowSel][columnSel].mined) {
             board[rowSel][columnSel].mined = true
             minesPlanted++
@@ -28,7 +30,7 @@ const spreadMines = (board, minesAmount) => {
     }
 }
 
-const createMineBoard = (rows, columns, minesAmount) => {
+const createMinedBoard = (rows, columns, minesAmount) => {
     const board = createBoard(rows, columns)
     spreadMines(board, minesAmount)
     return board
@@ -49,13 +51,13 @@ const getNeighbors = (board, row, column) => {
     rows.forEach(r => {
         columns.forEach(c => {
             const diferent = r !== row || c !== column
-            const validRows = r => 0 && r < board.length
+            const validRow = r >= 0 && r < board.length
             const validColumn = c >= 0 && c < board[0].length
-            if (diferent && validRows && validColumn) {
+            if (diferent && validRow && validColumn) {
                 neighbors.push(board[r][c])
             }
         })
-    });
+    })
     return neighbors
 }
 
@@ -83,17 +85,17 @@ const openField = (board, row, column) => {
 const fields = board => [].concat(...board)
 const hadExplosion = board => fields(board)
     .filter(field => field.exploded).length > 0
-const pedding = field => (field.mined && !field.flagged)
+const pendding = field => (field.mined && !field.flagged)
     || (!field.mined && !field.opened)
-const wonGame = board => fields(board).filter(pedding).length === 0
-const showMine = board => fields(board).filter(field => field.mined)
+const wonGame = board => fields(board).filter(pendding).length === 0
+const showMines = board => fields(board).filter(field => field.mined)
     .forEach(field => field.opened = true)
 
 export {
-    createMineBoard,
+    createMinedBoard,
     cloneBoard,
     openField,
     hadExplosion,
     wonGame,
-    showMine
+    showMines
 }

@@ -1,18 +1,19 @@
 import React, { Component } from 'react';
+import { StyleSheet, Text, View, Alert } from 'react-native';
+import params from './src/params'
+import MineField from './src/components/MineField'
+// import Header from './src/components/Header'
+// import LevelSelection from './src/screens/LevelSelection'
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
-
-import params from './src/params';
-import MineField from './src/components/MineField';
-import { createMineBoard } from './src/functions';
-
+  createMinedBoard,
+  cloneBoard,
+  openField,
+  hadExplosion,
+  wonGame,
+  showMines,
+  invertFlag,
+  flagsUsed
+} from './src/functions'
 
 export default class App extends Component {
 
@@ -31,8 +32,41 @@ export default class App extends Component {
     const cols = params.getColumnsAmount()
     const rows = params.getRowsAmount()
     return {
-      board: createMineBoard(rows, cols, this.minesAmount()),
+      board: createMinedBoard(rows, cols, this.minesAmount()),
+      won: false,
+      lost: false,
+      showLevelSelection: false,
     }
+  }
+
+  onOpenField = (row, column) => {
+    const board = cloneBoard(this.state.board)
+    openField(board, row, column)
+    const lost = hadExplosion(board)
+    const won = wonGame(board)
+
+    if (lost) {
+      showMines(board)
+      Alert.alert('Perdeeeeu!', 'Que buuuurro!')
+    }
+
+    if (won) {
+      Alert.alert('Parabéns', 'Você Venceu!')
+    }
+
+    this.setState({ board, lost, won })
+  }
+
+  onSelectField = (row, column) => {
+    const board = cloneBoard(this.state.board)
+    invertFlag(board, row, column)
+    const won = wonGame(board)
+
+    if (won) {
+      Alert.alert('Parabéns', 'Você Venceu!')
+    }
+
+    this.setState({ board, won })
   }
 
   render() {
@@ -41,7 +75,8 @@ export default class App extends Component {
         <Text style={styles.welcome}>Iniciando o Mines! </Text>
         <Text style={styles.instructions}>Tamanho da grade: {params.getRowsAmount()}x{params.getColumnsAmount()}</Text>
         <View style={styles.board}>
-          <MineField board={this.state.board} />
+          <MineField board={this.state.board}
+            onOpenField={this.onOpenField} />
         </View>
 
       </View>
