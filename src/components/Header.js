@@ -5,16 +5,17 @@ import Flag from './Flag'
 export default props => {
     return (
         <View style={styles.container}>
-            <View styles={styles.flagContainer}>
-                <TouchableOpacity onPress={props.onFlagPress} style={styles.flagButton}>
+            <View style={styles.flagContainer}>
+                <TouchableOpacity onPress={props.onFlagPress}
+                    style={styles.flagButton}>
                     <Flag bigger />
                 </TouchableOpacity>
                 <Text style={styles.flagsLeft}> = {props.flagsLeft}</Text>
             </View>
-            <TouchableOpacity style={styles.button} onPress={props.onNewGame}>
+            <TouchableOpacity style={styles.button}
+                onPress={props.onNewGame}>
                 <Text style={styles.buttonLabel}>Novo Jogo</Text>
             </TouchableOpacity>
-
         </View>
     )
 }
@@ -40,7 +41,7 @@ const styles = StyleSheet.create({
         fontSize: 30,
         fontWeight: 'bold',
         paddingTop: 5,
-        marginLeft: 20,
+        marginLeft: 5,
     },
     button: {
         backgroundColor: '#999',
